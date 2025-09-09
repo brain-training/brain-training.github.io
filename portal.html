@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>まいにち脳活サンプルテスト</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f0f0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* スマホ対応 */
+        @media (max-width: 640px) {
+            body {
+                padding: 10px;
+            }
+
+            .card {
+                padding: 20px;
+                border-radius: 8px;
+            }
+
+            h1 {
+                font-size: 20px !important;
+            }
+
+            .subtitle {
+                font-size: 12px !important;
+            }
+
+            .question-title {
+                font-size: 16px !important;
+            }
+
+            .question-text {
+                font-size: 14px !important;
+            }
+
+            .btn {
+                padding: 10px 20px !important;
+                font-size: 14px !important;
+            }
+
+            .page-indicator {
+                font-size: 16px !important;
+                padding: 6px 12px !important;
+            }
+
+            .site-link {
+                padding: 12px 16px !important;
+            }
+
+            .site-name {
+                font-size: 14px !important;
+            }
+
+            .site-url {
+                font-size: 11px !important;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .card {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 18px !important;
+            }
+
+            .button-container {
+                gap: 8px;
+            }
+
+            .btn {
+                padding: 8px 16px !important;
+                font-size: 13px !important;
+            }
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+            word-wrap: break-word;
+        }
+
+        .progress-container {
+            margin-bottom: 30px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #4285f4;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .question-section {
+            margin: 30px 0;
+        }
+
+        .question-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .question-text {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .instruction {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .btn-back {
+            background-color: #e0e0e0;
+            color: #666;
+            flex: 0 0 auto;
+        }
+
+        .btn-back:hover {
+            background-color: #d0d0d0;
+        }
+
+        .btn-back:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-next {
+            background-color: #4285f4;
+            color: white;
+            flex: 0 0 auto;
+            margin-left: auto;
+        }
+
+        .btn-next:hover {
+            background-color: #3367d6;
+        }
+
+        .btn-next:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .page-indicator {
+            background-color: #f5f5f5;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 30px;
+            display: inline-block;
+        }
+
+        .link-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #f0f0f0;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            margin: 12px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .link-button:hover {
+            background-color: #e8e8e8;
+            border-color: #4285f4;
+        }
+
+        .link-button.visited {
+            background-color: #e8f0fe;
+            border-color: #34a853;
+        }
+
+        .link-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .site-link {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .site-link:hover {
+            background-color: #e8f0fe;
+            border-color: #4285f4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .site-link.visited {
+            background-color: #e8f5e9;
+            border-color: #34a853;
+        }
+
+        .site-info {
+            flex: 1;
+        }
+
+        .site-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .site-url {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .arrow {
+            color: #999;
+            font-size: 20px;
+            margin-left: 12px;
+        }
+
+        .thank-you {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .thank-you h2 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .thank-you p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 640px) {
+            .thank-you {
+                padding: 40px 10px;
+            }
+
+            .thank-you h2 {
+                font-size: 22px;
+            }
+
+            .thank-you p {
+                font-size: 14px;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .visited-indicator {
+            display: inline-block;
+            padding: 4px 8px;
+            background-color: #34a853;
+            color: white;
+            font-size: 12px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+
+        .status-message {
+            margin-top: 12px;
+            padding: 8px 12px;
+            background-color: #e8f5e9;
+            border-left: 3px solid #34a853;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- スタート画面 -->
+        <div id="startPage" class="card">
+            <h1>まいにち脳活サンプルテスト</h1>
+            <p class="subtitle">株式会社D&Pメディア　千葉大学溝上研究室　兪研究室</p>
+            
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>進捗</span>
+                    <span>始める</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="question-section">
+                <h2 class="question-title">アンケートの開始</h2>
+                <p class="question-text">準備ができましたら、「次へ」ボタンを押してアンケートを開始してください。</p>
+                <p class="instruction">●該当する箇所に記入または丸で囲ってください</p>
+            </div>
+
+            <div class="button-container">
+                <button class="btn btn-back" disabled>戻る</button>
+                <button class="btn btn-next" onclick="startSurvey()">次へ</button>
+            </div>
+        </div>
+
+        <!-- 同意書 -->
+        <div id="question1" class="card hidden">
+            <div class="page-indicator">同意書</div>
+            
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>進捗</span>
+                    <span>1/6</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 16.67%"></div>
+                </div>
+            </div>
+
+            <div class="question-section">
+                <p class="question-text">以下のボタンをクリックして、今回の研究の同意書を確認してください。</p>
+                <p class="instruction">サイトを確認したら、このページに戻って「次へ」ボタンを押してください。</p>
+                
+                <button class="link-button" id="linkBtn1" onclick="visitSite(1, 'https://sites.google.com/dandpmedia.net/consent-form/%E3%83%9B%E3%83%BC%E3%83%A0')">
+                    同意書を開く
+                </button>
+                <div id="status1" class="status-message hidden">✓ 訪問済み</div>
+            </div>
+
+            <div class="button-container">
+                <button class="btn btn-back" onclick="goBack(1)">戻る</button>
+                <button class="btn btn-next" id="nextBtn1" onclick="nextQuestion(1)" disabled>次へ</button>
+            </div>
+        </div>
+
+        <!-- 問診票 -->
+        <div id="question2" class="card hidden">
+            <div class="page-indicator">問診票</div>
+            
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>進捗</span>
+                    <span>2/6</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 33.33%"></div>
+                </div>
+            </div>
+
+            <div class="question-section">
+                <p class="question-text">次のサイトを訪問してください。</p>
+                
+                <div class="link-list">
+                    <div class="site-link" id="siteLink2" onclick="visitSite(2, 'https://sites.google.com/dandpmedia.net/brain-training-every-day/%E3%83%9B%E3%83%BC%E3%83%A0')">
+                        <div class="site-info">
+                            <div class="site-name">問診票</div>
+                            <div class="site-url">https://sites.google.com/</div>
+                        </div>
+                        <span class="arrow">→</span>
+                    </div>
+                </div>
+                <div id="status2" class="status-message hidden">✓ 訪問済み</div>
+            </div>
+
+            <div class="button-container">
+                <button class="btn btn-back" onclick="goBack(2)">戻る</button>
+                <button class="btn btn-next" id="nextBtn2" onclick="nextQuestion(2)" disabled>次へ</button>
+            </div>
+        </div>
+
+        <!-- まいにち脳活アプリ -->
+        <div id="question3" class="card hidden">
+            <div class="page-indicator">まいにち脳活アプリ</div>
+            
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>進捗</span>
+                    <span>3/6</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 50%"></div>
+                </div>
+            </div>
+
+            <div class="question-section">
+                <p class="question-text">以下のサイトにアクセスしてください。</p>
+                
+                <div class="link-list">
+                    <div class="site-link" id="siteLink3" onclick="visitSite(3, 'https://sites.google.com/dandpmedia.net/home/%E3%83%9B%E3%83%BC%E3%83%A0')">
+                        <div class="site-info">
+                            <div class="site-name">まいにち脳活アプリ</div>
+                            <div class="site-url">https://sites.google.com/</div>
+                        </div>
+                        <span class="arrow">→</span>
+                    </div>
+                </div>
+                <div id="status3" class="status-message hidden">✓ 訪問済み</div>
+            </div>
+
+            <div class="button-container">
+                <button class="btn btn-back" onclick="goBack(3)">戻る</button>
+                <button class="btn btn-next" id="nextBtn3" onclick="nextQuestion(3)" disabled>次へ</button>
+            </div>
+        </div>
+
+        <!-- SPP検査 -->
+        <div id="question4" class="card hidden">
+            <div class="page-indicator">SPP検査</div>
+            
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>進捗</span>
+                    <span>4/6</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 66.67%"></div>
+                </div>
+            </div>
+
+            <div class="question-section">
+                <p class="question-text">次のサイトを確認してください。</p>
+                
+                <div class="link-list">
+                    <div class="site-link" id="siteLink4" onclick="visitSite(4, 'https://sppchecker.github.io/')">
+                        <div class="site-info">
+                            <div class="site-name">SPP色覚検査システム</div>
+                            <div class="site-url">https://sppchecker.github.io/</div>
+                        </div>
+                        <span class="arrow">→</span>
+                    </div>
+                </div>
+                <div id="status4" class="status-message hidden">✓ 訪問済み</div>
+            </div>
+
+            <div class="button-container">
+                <button class="btn btn-back" onclick="goBack(4)">戻る</button>
+                <button class="btn btn-next" id="nextBtn4" onclick="nextQuestion(4)" disabled>次へ</button>
+            </div>
+        </div>
+
+        <!-- トレイルメイキングテスト -->
+        <div id="question5" class="card hidden">
+            <div class="page-indicator">トレイルメイキングテスト</div>
+            
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>進捗</span>
+                    <span>5/6</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 83.33%"></div>
+                </div>
+            </div>
+
+            <div class="question-section">
+                <p class="question-text">次のサイトを訪問してください。</p>
+                
+                <div class="link-list">
+                    <div class="site-link" id="siteLink5" onclick="visitSite(5, 'https://sites.google.com/dandpmedia.net/trail-making-test/%E3%83%9B%E3%83%BC%E3%83%A0')">
+                        <div class="site-info">
+                            <div class="site-name">トレイルメイキングテスト</div>
+                            <div class="site-url">https://sites.google.com/</div>
+                        </div>
+                        <span class="arrow">→</span>
+                    </div>
+                </div>
+                <div id="status5" class="status-message hidden">✓ 訪問済み</div>
+            </div>
+
+            <div class="button-container">
+                <button class="btn btn-back" onclick="goBack(5)">戻る</button>
+                <button class="btn btn-next" id="nextBtn5" onclick="nextQuestion(5)" disabled>次へ</button>
+            </div>
+        </div>
+
+        <!-- ストループテスト -->
+        <div id="question6" class="card hidden">
+            <div class="page-indicator">ストループテスト</div>
+            
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>進捗</span>
+                    <span>6/6</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%"></div>
+                </div>
+            </div>
+
+            <div class="question-section">
+                <p class="question-text">最後のサイトを訪問してください。</p>
+                
+                <div class="link-list">
+                    <div class="site-link" id="siteLink6" onclick="visitSite(6, 'https://sites.google.com/dandpmedia.net/stroop-test/%E3%83%9B%E3%83%BC%E3%83%A0')">
+                        <div class="site-info">
+                            <div class="site-name">ストループテスト</div>
+                            <div class="site-url">https://sites.google.com/</div>
+                        </div>
+                        <span class="arrow">→</span>
+                    </div>
+                </div>
+                <div id="status6" class="status-message hidden">✓ 訪問済み</div>
+            </div>
+
+            <div class="button-container">
+                <button class="btn btn-back" onclick="goBack(6)">戻る</button>
+                <button class="btn btn-next" id="nextBtn6" onclick="nextQuestion(6)" disabled>次へ</button>
+            </div>
+        </div>
+
+        <!-- 完了画面 -->
+        <div id="completePage" class="card hidden">
+            <div class="thank-you">
+                <h2>ご協力ありがとうございました</h2>
+                <p>すべてのサイトの訪問が完了しました。<br>貴重なお時間をいただき、誠にありがとうございます。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 'start';
+        let visitedSites = {};
+        const totalPages = 6;
+
+        // サイト情報の配列
+        const sites = [
+            { name: '同意書', url: 'https://sites.google.com/dandpmedia.net/consent-form/%E3%83%9B%E3%83%BC%E3%83%A0' },
+            { name: '問診票', url: 'https://sites.google.com/dandpmedia.net/brain-training-every-day/%E3%83%9B%E3%83%BC%E3%83%A0' },
+            { name: 'まいにち脳活アプリ', url: 'https://sites.google.com/dandpmedia.net/home/%E3%83%9B%E3%83%BC%E3%83%A0' },
+            { name: 'SPP検査', url: 'https://sppchecker.github.io/' },
+            { name: 'トレイルメイキングテスト', url: 'https://sites.google.com/dandpmedia.net/trail-making-test/%E3%83%9B%E3%83%BC%E3%83%A0' },
+            { name: 'ストループテスト', url: 'https://sites.google.com/dandpmedia.net/stroop-test/%E3%83%9B%E3%83%BC%E3%83%A0' }
+        ];
+
+        function startSurvey() {
+            document.getElementById('startPage').classList.add('hidden');
+            document.getElementById('question1').classList.remove('hidden');
+            currentPage = 1;
+            
+            // 訪問記録を初期化
+            visitedSites = {};
+            
+            // タイムスタンプを記録
+            visitedSites.startTime = new Date().toISOString();
+        }
+
+        function visitSite(pageNumber, url) {
+            // 新しいタブでサイトを開く
+            window.open(url, '_blank');
+            
+            // ボタンやリンクのスタイルを変更
+            if (pageNumber === 1) {
+                document.getElementById('linkBtn1').classList.add('visited');
+            } else {
+                document.getElementById(`siteLink${pageNumber}`).classList.add('visited');
+            }
+            
+            // 訪問済みメッセージを表示
+            document.getElementById(`status${pageNumber}`).classList.remove('hidden');
+            
+            // 次へボタンを有効化
+            document.getElementById(`nextBtn${pageNumber}`).disabled = false;
+            
+            // 訪問記録を保存
+            visitedSites[`site${pageNumber}`] = {
+                name: sites[pageNumber - 1].name,
+                url: sites[pageNumber - 1].url,
+                visitedAt: new Date().toISOString()
+            };
+            
+            console.log(`Visited: ${sites[pageNumber - 1].name}`);
+        }
+
+        function nextQuestion(questionNumber) {
+            // 現在の質問を非表示
+            document.getElementById(`question${questionNumber}`).classList.add('hidden');
+            
+            // 次の質問または完了画面を表示
+            if (questionNumber < totalPages) {
+                document.getElementById(`question${questionNumber + 1}`).classList.remove('hidden');
+                currentPage = questionNumber + 1;
+            } else {
+                showComplete();
+            }
+        }
+
+        function goBack(questionNumber) {
+            document.getElementById(`question${questionNumber}`).classList.add('hidden');
+            
+            if (questionNumber === 1) {
+                document.getElementById('startPage').classList.remove('hidden');
+                currentPage = 'start';
+            } else {
+                document.getElementById(`question${questionNumber - 1}`).classList.remove('hidden');
+                currentPage = questionNumber - 1;
+            }
+        }
+
+        function showComplete() {
+            // すべての質問を非表示
+            for (let i = 1; i <= totalPages; i++) {
+                const questionEl = document.getElementById(`question${i}`);
+                if (questionEl) {
+                    questionEl.classList.add('hidden');
+                }
+            }
+            
+            // 完了画面を表示
+            document.getElementById('completePage').classList.remove('hidden');
+            currentPage = 'complete';
+            
+            // 完了時刻を記録
+            visitedSites.endTime = new Date().toISOString();
+            
+            // 訪問データをコンソールに出力（実際の実装では適切なエンドポイントに送信）
+            console.log('Survey completed:', visitedSites);
+        }
+    </script>
+</body>
+</html>
